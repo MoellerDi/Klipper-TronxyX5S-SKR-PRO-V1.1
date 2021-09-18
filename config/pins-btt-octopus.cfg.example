@@ -1,3 +1,12 @@
+# This file contains common pin mappings for the BigTreeTech Octopus.
+# To use this config, the firmware should be compiled for the
+# STM32F446 with a "32KiB bootloader" and a "12MHz crystal" clock reference.
+
+# The "make flash" command does not work on the BTT Octopus. Instead,
+# after running "make", copy the generated "out/klipper.bin" file to a
+# file named "firmware.bin" on an SD card and then restart the BTT Octopus
+# with that SD card.
+
 # Some assumptions:
 # MOTOR0 -> X
 # MOTOR1 -> Y
