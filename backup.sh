@@ -6,4 +6,3 @@ cd /home/pi/klipper_config/
 git add --all
 git commit -m "backup script"
 git push
-
