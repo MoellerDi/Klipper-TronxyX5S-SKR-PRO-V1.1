@@ -20,12 +20,9 @@ mainsail_folder=~/mainsail
 #fluidd_folder=~/fluidd
 
 #####################################################################
-#####################################################################
-
-
-#####################################################################
 ################ !!! DO NOT EDIT BELOW THIS LINE !!! ################
 #####################################################################
+
 grab_version(){
   if [ ! -z "$klipper_folder" ]; then
     cd "$klipper_folder"
@@ -60,11 +57,3 @@ push_config(){
 
 grab_version
 push_config
-
-
-
-#cd /home/pi/klipper_config/
-##git status
-#git add --all
-#git commit -m "backup script"
-#git push
