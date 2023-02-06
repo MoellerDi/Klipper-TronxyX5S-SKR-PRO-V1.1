@@ -1,2 +1,4 @@
 backup.log
 printer-*.cfg
+*.conf.bkp
+*.secrets
