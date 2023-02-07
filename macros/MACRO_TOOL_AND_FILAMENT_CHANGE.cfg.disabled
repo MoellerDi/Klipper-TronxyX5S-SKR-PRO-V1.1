@@ -69,10 +69,10 @@ gcode:
 
 
 #####################################################################
-# 	LOAD_FILAMENT
+# 	TOOL_LOAD_FILAMENT
 #####################################################################
-[gcode_macro LOAD_FILAMENT]
-description: Unload/load for active extruder as needed
+[gcode_macro TOOL_LOAD_FILAMENT]
+description: Unload/load for active extruder as needed. This should be called from Cura Extruder Start G-Code
 #default_parameter_FORCE: 0
 gcode:
   {% set FORCE = params.FORCE|default(0)|int %}
@@ -91,9 +91,9 @@ gcode:
 
 
 #####################################################################
-# 	UNLOAD_FILAMENT
+# 	TOOL_UNLOAD_FILAMENT
 #####################################################################
-[gcode_macro UNLOAD_FILAMENT]
+[gcode_macro TOOL_UNLOAD_FILAMENT]
 description: Move filament of any extruder to standby-position if needed
 #default_parameter_FORCE: 0
 gcode:
