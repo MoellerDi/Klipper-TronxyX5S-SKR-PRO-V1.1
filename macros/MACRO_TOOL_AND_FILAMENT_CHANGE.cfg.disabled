@@ -4,8 +4,8 @@
 [delayed_gcode read_active_extruder_from_file]
 initial_duration: 1
 gcode:
-  FEEDBACK MSG="delayed_gcode: Filament loaded: {printer.save_variables.variables.filament_loaded}"
-  FEEDBACK MSG="delayed_gcode: Active extruder: {printer.toolhead.extruder}"
+  _FEEDBACK MSG="delayed_gcode: Filament loaded: {printer.save_variables.variables.filament_loaded}"
+  _FEEDBACK MSG="delayed_gcode: Active extruder: {printer.toolhead.extruder}"
   {% set loaded_extruder = printer.save_variables.variables.filament_loaded %}
   {% if loaded_extruder != "none" %}
     {% if   loaded_extruder == "extruder"  %}
@@ -50,7 +50,7 @@ variable_active_tool: 0
 gcode:
   {% set tool = params.TOOL|default('none')|string %}
   {% if tool == "none" %}
-    FEEDBACK MSG="Active Tool: {printer.toolhead.extruder}"
+    _FEEDBACK MSG="Active Tool: {printer.toolhead.extruder}"
   {% else %}
     ACTIVATE_EXTRUDER_WITH_SYNC EXTRUDER={tool}
   {% endif %}
@@ -61,7 +61,7 @@ description: Set active exdruder and enable synced direct drive
 #default_parameter_EXTRUDER: ""
 gcode:
   {% set EXTRUDER = params.EXTRUDER|default("") %}
-  FEEDBACK MSG="ACTIVATE_EXTRUDER_WITH_SYNC: Activating extruder {EXTRUDER}"
+  _FEEDBACK MSG="ACTIVATE_EXTRUDER_WITH_SYNC: Activating extruder {EXTRUDER}"
   # The following command is deprecated and will be removed in the near future
   # SYNC_EXTRUDER_MOTION to be used in future; see https://www.klipper3d.org/G-Codes.html#sync_extruder_motion
   SYNC_STEPPER_TO_EXTRUDER STEPPER=direct_drive EXTRUDER={EXTRUDER}
@@ -115,7 +115,7 @@ gcode:
     {% if printer.save_variables.variables["state_" + printer.toolhead.extruder] == "loaded" %}
       unloadExtruder FORCE={FORCE}
     {% endif %}
-    FEEDBACK MSG="EJECT_FILAMENT: Ejecting filament in "{printer.toolhead.extruder}
+    _FEEDBACK MSG="EJECT_FILAMENT: Ejecting filament in "{printer.toolhead.extruder}
     SET_FILAMENT_SENSOR SENSOR=runout_{printer.toolhead.extruder} ENABLE=0
     M400           ;Finish Moves
     M83            ;put the E axis into relative mode
@@ -123,9 +123,9 @@ gcode:
     M400           ;Finish Moves
     SET_STEPPER_ENABLE STEPPER={printer.toolhead.extruder} ENABLE=0
     SAVE_VARIABLE VARIABLE=state_{printer.toolhead.extruder} VALUE='"ejected"'
-    FEEDBACK MSG="EJECT_FILAMENT: Filament in "{printer.toolhead.extruder}" ejected"
+    _FEEDBACK MSG="EJECT_FILAMENT: Filament in "{printer.toolhead.extruder}" ejected"
   {% else %}
-    FEEDBACK MSG="EJECT_FILAMENT: Filament in "{printer.toolhead.extruder}" already ejected (use FORCE=1)"
+    _FEEDBACK MSG="EJECT_FILAMENT: Filament in "{printer.toolhead.extruder}" already ejected (use FORCE=1)"
   {% endif %}
   RESTORE_GCODE_STATE NAME=eject_filament
 
@@ -140,7 +140,7 @@ gcode:
   {% set FORCE = params.FORCE|default(0)|int %}
   SAVE_GCODE_STATE NAME=preload_filament
   {% if printer.save_variables.variables["state_" + printer.toolhead.extruder] != "preloaded" or FORCE==1 %}
-    FEEDBACK MSG="PRELOAD_FILAMENT: Preloading filament in "{printer.toolhead.extruder}
+    _FEEDBACK MSG="PRELOAD_FILAMENT: Preloading filament in "{printer.toolhead.extruder}
     SET_FILAMENT_SENSOR SENSOR=runout_{printer.toolhead.extruder} ENABLE=0
     M400           ;Finish Moves
     M83            ;put the E axis into relative mode
@@ -148,9 +148,9 @@ gcode:
     M400           ;Finish Moves
     SET_FILAMENT_SENSOR SENSOR=runout_{printer.toolhead.extruder} ENABLE=1
     SAVE_VARIABLE VARIABLE=state_{printer.toolhead.extruder} VALUE='"preloaded"'
-    FEEDBACK MSG="PRELOAD_FILAMENT: Filament in "{printer.toolhead.extruder}" preloaded"
+    _FEEDBACK MSG="PRELOAD_FILAMENT: Filament in "{printer.toolhead.extruder}" preloaded"
   {% else %}
-    FEEDBACK MSG="PRELOAD_FILAMENT: Filament in "{printer.toolhead.extruder}" already preloaded (use FORCE=1)"
+    _FEEDBACK MSG="PRELOAD_FILAMENT: Filament in "{printer.toolhead.extruder}" already preloaded (use FORCE=1)"
   {% endif %}
   RESTORE_GCODE_STATE NAME=preload_filament
 
@@ -183,7 +183,7 @@ gcode:
       ACTIVATE_EXTRUDER_WITH_SYNC EXTRUDER={svv.filament_loaded}
       {% set active_extruder = svv.filament_loaded %} # needed as it seems printer.toolhead.extruder is not being updated within the same macro_call
     {% endif %}
-    FEEDBACK MSG="unloadExtruder: Unloading filament in "{active_extruder}
+    _FEEDBACK MSG="unloadExtruder: Unloading filament in "{active_extruder}
     SET_FILAMENT_SENSOR SENSOR=runout_{active_extruder} ENABLE=0
     M400            ;Finish Moves
     G11             ;unretract if retracted
@@ -208,7 +208,7 @@ gcode:
       ACTIVATE_EXTRUDER_WITH_SYNC EXTRUDER={restore_extruder}
     {% endif %}
   {% else %}
-    FEEDBACK MSG="unloadExtruder: Filament in "{printer.toolhead.extruder}" already unloaded (use FORCE=1)"
+    _FEEDBACK MSG="unloadExtruder: Filament in "{printer.toolhead.extruder}" already unloaded (use FORCE=1)"
   {% endif %}
   RESTORE_GCODE_STATE NAME=unloadExtruder
 
@@ -230,12 +230,12 @@ gcode:
     {% if printer.save_variables.variables["state_" + printer.toolhead.extruder] == "preloaded" %}
       {% set action = 1 %}
     {% else %}
-      FEEDBACK MSG="loadExtruder: Filament in "{printer.toolhead.extruder}" NOT preloaded"
+      _FEEDBACK MSG="loadExtruder: Filament in "{printer.toolhead.extruder}" NOT preloaded"
     {% endif%}
   {% endif %}
 
   {% if action|int == 1 %}
-    FEEDBACK MSG="loadExtruder: Loading filament in "{printer.toolhead.extruder}
+    _FEEDBACK MSG="loadExtruder: Loading filament in "{printer.toolhead.extruder}
     SET_FILAMENT_SENSOR SENSOR=runout_{printer.toolhead.extruder} ENABLE=0
     M400           ;Finish Moves
     M83            ;put the E axis into relative mode
@@ -245,7 +245,7 @@ gcode:
     SAVE_VARIABLE VARIABLE=filament_loaded VALUE=\'{printer.toolhead.extruder}\'
     SAVE_VARIABLE VARIABLE=state_{printer.toolhead.extruder} VALUE='"loaded"'
   {% else %}
-    FEEDBACK MSG="loadExtruder: Filament in "{printer.toolhead.extruder}" already loaded (use FORCE=1)"
+    _FEEDBACK MSG="loadExtruder: Filament in "{printer.toolhead.extruder}" already loaded (use FORCE=1)"
   {% endif %}
   RESTORE_GCODE_STATE NAME=loadExtruder
 
